@@ -38,3 +38,8 @@ git clone https://github.com/bage79/nlp4kor-pytorch.git
 pip install -r ~/workspace/nlp4kor-pytorch/requirements.txt
 ```
 
+### download corpus
+```shell
+cd ~/workspace
+git clone https://gitlab.com/bage79/nlp4kor-ko.wikipedia.org.git
+```
