@@ -1,5 +1,8 @@
+import os
+
 import numpy
 
+from nlp4kor_pytorch.config import WORD2VEC_DATA_DIR
 from nlp4kor_pytorch.word2vec.word2vec_embedding import Word2VecEmbedding
 
 METRIC = 'cosine'
@@ -42,29 +45,27 @@ def test_relation(embedding: Word2VecEmbedding, top_n=1, metric=METRIC):
     """
     for word1, word2, word3 in [
         ('한국', '서울', '일본'),
-        ('왕', '여왕', '남자'),
-        ('연구', '연구를', '공부'),
-        ('태어난', '태어났다.', '발매된'),
-        ('태어난', '태어났다.', '공개된'),
+        ('한국', '서울', '미국'),  # 미국의 수도가 아니라 스웨덴의 수도가 나옴.
+        ('한국', '서울', '중국'),  # 미국의 수도가 아니라 영국의 수도가 나옴.
         ('서울', '서울시', '부산'),
-        # ('서울', '서울시', '광주'),
+        ('서울', '서울시', '인천'),
 
-        # ('한국', '서울', '중국'),
-        # ('한국', '서울', '미국'),  # 미국의 수도가 아니라 영국의 수도가 나옴.
-        # ('미국', '워싱턴', '한국'),
-        # ('미국', '뉴욕', '한국'),
-        # ('시작', '시작했다.', '공부'),
-        # ('시작', '시작했다.', '사과'),  # 동음이의어 오류
+        ('왕', '여왕', '남자'),
+        ('소년', '남자', '소녀'),
 
         ('유치원', '초등학교', '중학교'),
-        # ('중학교', '초등학교', '고등학교'),
 
-        ('공개', '공개했다.', '발표'),
-        ('공개', '공개하고', '발표'),
-        # ('공개', '공개하여', '발표'),
+        ('태어난', '태어났다.', '발매된'),
+        ('태어난', '태어났다.', '공개된'),
+        # ('시작', '시작했다.', '사과'),  # 동음이의어 오류
 
+        ('공개', '공개했다.', '발매'),
+        ('공개', '공개하고', '발매'),
+
+        ('연구', '연구를', '공부'),
         ('연구', '연구를', '축구'),
-        ('농구', '농구를', '축구'),  # 연구-연구를 보다 잘 나옴.
+        ('스포츠', '스포츠를', '공부'),  # 연구-연구를 보다 잘 나옴.
+        ('스포츠', '스포츠를', '축구'),  # 연구-연구를 보다 잘 나옴.
     ]:
         y = embedding.relation_ab2xy(word1, word2, word3, top_n=top_n, metric=metric)
         print(f"{word1} vs {word2} = {word3} vs {y}")
@@ -174,23 +175,17 @@ def test_sentiment(embedding, metric=METRIC):  # TODO:
         print(f'sentiment: {numpy.mean(sentiments):.3f}')
 
 
-def test_chunking(embedding):  # TODO:
-    pass
-
-
-def test_translation(embedding):  # TODO:
-    pass
-
-
 if __name__ == '__main__':
-    embedding_file = Word2VecEmbedding.DEFAULT_FILE
-    print(embedding_file)
+    # embedding_file = Word2VecEmbedding.DEFAULT_FILE
+    embedding_file = os.path.join(WORD2VEC_DATA_DIR, 'ko.wikipedia.org.sentences.token_word.vocab_1e+05.vocab.window_1.side_both.corpus.embed_300.batch_500.neg_100.subsample_1e-05.lr_1e-04.decay_0.0.epoch_20.embedding')
+
     print()
+    print(embedding_file)
 
     embedding = Word2VecEmbedding.load(embedding_file)
     print()
     test_doesnt_match(embedding)
     print()
     test_relation(embedding)
-    # print()
-    # test_root(embedding)
+    print()
+    test_root(embedding)

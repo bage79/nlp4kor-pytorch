@@ -12,7 +12,7 @@ from bage_utils.date_util import DateUtil
 from bage_utils.pytorch_util import PytorchUtil
 from bage_utils.slack_util import SlackUtil
 from bage_utils.watch_util import WatchUtil
-from nlp4kor_pytorch.config import log, WIKIPEDIA_SENTENCE_FILE, WIKIPEDIA_DATA_DIR
+from nlp4kor_pytorch.config import log, WIKIPEDIA_SENTENCE_FILE, WORD2VEC_DATA_DIR
 from nlp4kor_pytorch.word2vec.word2vec_corpus import Word2VecCorpus
 from nlp4kor_pytorch.word2vec.word2vec_embedding import Word2VecEmbedding
 from nlp4kor_pytorch.word2vec.word2vec_model import SGNSModel
@@ -116,7 +116,8 @@ class Word2VecTrainer(object):
                 log.info('')
                 break
             else:
-                best_loss = total_loss
+                if best_loss < total_loss:
+                    best_loss = total_loss
                 log.info(f"[e{self.epoch:2d}][window: {self.window}][lr: {lr:.0e}] embedding.save()...")
                 args.epoch = self.epoch
                 last_embedding_file = embedding.save(idx2vec=trainer.embedding, filepath=Word2VecEmbedding.get_filenpath(args))
@@ -133,7 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('--device_no', default="0" if torch.cuda.is_available() else None, type=str, help="use GPU or CPU (None: CPU)")
 
     parser.add_argument('--text_file', default=WIKIPEDIA_SENTENCE_FILE, type=str, help="corpus file path")
-    parser.add_argument('--data_dir', default=WIKIPEDIA_DATA_DIR, type=str, help="data directory path (default:'./data')")
+    parser.add_argument('--data_dir', default=WORD2VEC_DATA_DIR, type=str, help="data directory path (default:'./data')")
     # options for vocab, corpus
 
     parser.add_argument('--corpus_file', default=Word2VecCorpus.DEFAULT_FILE, type=str)

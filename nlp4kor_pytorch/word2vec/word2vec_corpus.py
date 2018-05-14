@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 
 from bage_utils.file_util import FileUtil
 from bage_utils.num_util import NumUtil
-from nlp4kor_pytorch.config import log, WIKIPEDIA_SENTENCE_FILE, WIKIPEDIA_DATA_DIR
+from nlp4kor_pytorch.config import log, WIKIPEDIA_SENTENCE_FILE, WORD2VEC_DATA_DIR
 from nlp4kor_pytorch.word2vec.word2vec_vocab import Word2VecVocab
 
 
@@ -131,7 +131,7 @@ class Word2VecCorpus(Dataset):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--text_file', default=WIKIPEDIA_SENTENCE_FILE, type=str, help="corpus file path")
-    parser.add_argument('--data_dir', default=WIKIPEDIA_DATA_DIR, type=str, help="data directory path (default:'./data')")
+    parser.add_argument('--data_dir', default=WORD2VEC_DATA_DIR, type=str, help="data directory path (default:'./data')")
 
     parser.add_argument('--vocab_file', default=Word2VecVocab.DEFAULT_FILE, type=str)
     parser.add_argument('--window', default=Word2VecCorpus.WINDOW, type=int, help="window size")

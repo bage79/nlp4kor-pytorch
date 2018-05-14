@@ -16,11 +16,11 @@
 ./word2vec_trainer.sh
 ```
 - batch size: 500
+- negative samples: 100
+- optimizer & learning rate: Adam, 1e-4
 - epoch: 40
 - subsample rate: 1e-5
-- negative samples: 20
 - embedding size: 300
-- optimizer & learning rate: Adam, 1e-3
 
 ### Use the word2vec embedding
 ```shell

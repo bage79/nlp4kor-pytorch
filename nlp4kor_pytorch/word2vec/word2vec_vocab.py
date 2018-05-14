@@ -9,15 +9,15 @@ import numpy
 
 from bage_utils.file_util import FileUtil
 from bage_utils.num_util import NumUtil
-from nlp4kor_pytorch.config import log, WIKIPEDIA_SENTENCE_FILE, WIKIPEDIA_DATA_DIR, SAMPLE_WIKIPEDIA_SENTENCE_FILE
+from nlp4kor_pytorch.config import log, WIKIPEDIA_SENTENCE_FILE, WORD2VEC_DATA_DIR, SAMPLE_WIKIPEDIA_SENTENCE_FILE
 
 
 class Word2VecVocab(object):
     MAX_VOCAB = int(1e5)
     MIN_COUNT = 2
     TOKEN = 'word'  # ['word', 'morph', 'character', 'jaso']
-    DEFAULT_FILE = os.path.join(WIKIPEDIA_DATA_DIR, f'{os.path.basename(WIKIPEDIA_SENTENCE_FILE)}.token_{TOKEN}.vocab_{MAX_VOCAB:.0e}.vocab')
-    SAMPLE_FILE = os.path.join(WIKIPEDIA_DATA_DIR, f'{os.path.basename(SAMPLE_WIKIPEDIA_SENTENCE_FILE)}.token_{TOKEN}.vocab_{MAX_VOCAB:.0e}.vocab')
+    DEFAULT_FILE = os.path.join(WORD2VEC_DATA_DIR, f'{os.path.basename(WIKIPEDIA_SENTENCE_FILE)}.token_{TOKEN}.vocab_{MAX_VOCAB:.0e}.vocab')
+    SAMPLE_FILE = os.path.join(WORD2VEC_DATA_DIR, f'{os.path.basename(SAMPLE_WIKIPEDIA_SENTENCE_FILE)}.token_{TOKEN}.vocab_{MAX_VOCAB:.0e}.vocab')
 
     UNK_IDX = 0
     UNK_CHAR = '¿'
@@ -42,7 +42,7 @@ class Word2VecVocab(object):
         return os.path.join(data_dir, f'{os.path.basename(text_file)}.token_{token}.vocab_{vocab_size:.0e}.vocab')
 
     @classmethod
-    def build(cls, text_file: str, vocab_size=int(1e5), token=TOKEN, min_count=2, data_dir=WIKIPEDIA_DATA_DIR) -> 'Word2VecVocab':
+    def build(cls, text_file: str, vocab_size=int(1e5), token=TOKEN, min_count=2, data_dir=WORD2VEC_DATA_DIR) -> 'Word2VecVocab':
         log.info(f"building vocab... {text_file}")
         if data_dir is None:
             data_dir = os.path.dirname(text_file)
@@ -98,7 +98,7 @@ class Word2VecVocab(object):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--text_file', default=WIKIPEDIA_SENTENCE_FILE, type=str, help="corpus file path")
-    parser.add_argument('--data_dir', default=WIKIPEDIA_DATA_DIR, type=str, help="data directory path (default:'./data')")
+    parser.add_argument('--data_dir', default=WORD2VEC_DATA_DIR, type=str, help="data directory path (default:'./data')")
 
     parser.add_argument('--vocab_size', default=Word2VecVocab.MAX_VOCAB, type=int, help="maximum number of vocab (default:1e5)")
     parser.add_argument('--token', default=Word2VecVocab.TOKEN, choices=['word', 'morph', 'character', 'jaso'], help="token is word or morph or character (default: 'word')")

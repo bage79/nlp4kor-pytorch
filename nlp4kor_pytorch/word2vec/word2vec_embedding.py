@@ -5,23 +5,22 @@ import pickle
 import numpy
 from scipy.spatial import distance
 
-from nlp4kor_pytorch.word2vec.word2vec_corpus import Word2VecCorpus
+from nlp4kor_pytorch.config import WORD2VEC_EMBEDDING_FILE
 
 
 class Word2VecEmbedding(object):
-    BATCH = 200
-    EPOCH = 40
-    SUBSAMPLE = 1e-5
-    NEG_SAMPLE = 20
-    NEG_WEIGHT = True  # True in [True, False]
     EMBED = 300  # 300 is best in [50, 300]
+    BATCH = 500
+    NEG_SAMPLE = 100
+    EPOCH = 20
+    SUBSAMPLE = 1e-5
+    NEG_WEIGHT = True  # True in [True, False]
 
-    LEARNING_RATE = 1e-3  # 1e-3 is best in [1e-3, 1e-5]
+    LEARNING_RATE = 1e-4  # 1e-3 is best in [1e-3, 1e-5]
     LEARNING_DECAY = 0.0
 
-    DEFAULT_FILE = f'{Word2VecCorpus.DEFAULT_FILE}.embed_{EMBED}.batch_{BATCH}.neg_{NEG_SAMPLE}.subsample_{SUBSAMPLE:.0e}.lr_{LEARNING_RATE:.0e}.decay_{LEARNING_DECAY:.1f}.epoch_{EPOCH}.embedding'
-
-    # DEFAULT_FILE = WORD2VEC_EMBEDDING_FILE
+    # DEFAULT_FILE = f'{Word2VecCorpus.DEFAULT_FILE}.embed_{EMBED}.batch_{BATCH}.neg_{NEG_SAMPLE}.subsample_{SUBSAMPLE:.0e}.lr_{LEARNING_RATE:.0e}.decay_{LEARNING_DECAY:.1f}.epoch_{EPOCH}.embedding'
+    DEFAULT_FILE = WORD2VEC_EMBEDDING_FILE
 
     # noinspection PyUnresolvedReferences
     def __init__(self, filepath: str, vocab: 'Word2VecVocab'):
