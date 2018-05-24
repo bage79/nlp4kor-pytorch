@@ -59,7 +59,7 @@ class Word2VecTrainer(object):
         s = f'{self.__class__.__name__}(epoch:{self.epoch}, batch: {self.batch}, embed: {self.embed})'
         return s
 
-    def train(self, iterations: int, batch: int, embedding: Word2VecEmbedding, args: argparse.Namespace) -> Word2VecEmbedding:
+    def train(self, iterations: int, batch: int, embedding: Word2VecEmbedding, args: argparse.Namespace) -> str:
         batches_in_epoch = int(numpy.ceil(len(self.dataloader.dataset) / batch))
         total_batches = batches_in_epoch * iterations
         nth_total_batch = 0
@@ -70,7 +70,7 @@ class Word2VecTrainer(object):
         watch.start()
         best_loss = float("inf")
         first_epoch, last_epoch = self.epoch + 1, self.epoch + iterations + 1
-        last_embedding_file = ''
+        last_embedding_file = None
 
         log.info(Word2VecEmbedding.get_filenpath(args))
         for self.epoch in range(first_epoch, last_epoch):
