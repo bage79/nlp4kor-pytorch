@@ -8,7 +8,6 @@ sleep 3
 echo "rm -f logs/${PROGRAM}.*"
 rm -f logs/${PROGRAM}.*
 
-
 option=""
 echo "python3 ./${PROGRAM} $option >/dev/null 2>&1 &"
 nohup python3 ./${PROGRAM} $option >/dev/null 2>&1 &

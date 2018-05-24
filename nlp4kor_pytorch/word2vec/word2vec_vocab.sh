@@ -11,3 +11,4 @@ rm -f logs/${PROGRAM}.*
 options=""
 echo "python3 ./${PROGRAM} $options >/dev/null 2>&1 &"
 nohup python3 ./${PROGRAM} $options >/dev/null 2>&1 &
+
