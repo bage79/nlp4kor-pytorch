@@ -25,11 +25,13 @@ git lfs install
 
 ### install this source codes
 - 환경변수 PYTHONPATH 에 `~/workspace/nlp4kor` 를 추가하시는 것이 좋습니다.
-    - `export PYTHONPATH=~/workspace/nlp4kor:$PYTHONPATH`
-    - ~/.bash_profile 또는 ~/.profile 에 한 줄을 추가해 주세요.
+    - ~/.bash_profile 또는 ~/.profile 에 아래 한 줄을 추가해 주세요.
+    	- `export PYTHONPATH=~/workspace/nlp4kor:$PYTHONPATH`
 ```shell
-mkdir ~/workspae
+mkdir ~/workspace
 cd ~/workspace
+
+pip install --upgrade pip
 
 git clone https://github.com/bage79/nlp4kor.git
 pip install -r ~/workspace/nlp4kor/requirements.txt
