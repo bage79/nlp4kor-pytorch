@@ -12,10 +12,8 @@ log = None
 if log is None:
     if is_server():  # by shell script
         log = LogUtil.get_logger(sys.argv[0], level=logging.INFO, console_mode=True, multiprocess=False)  # global log
-    elif is_pycharm_remote():  # remote gpu server
+    else:
         log = LogUtil.get_logger(sys.argv[0], level=logging.DEBUG, console_mode=True, multiprocess=False)  # global log # console_mode=True for jupyter
-    else:  # my macbook
-        log = LogUtil.get_logger(None, level=logging.DEBUG, console_mode=True)  # global log
 
 #################################################
 # DB
@@ -49,4 +47,4 @@ WORD2VEC_DATA_DIR = os.path.join(WIKIPEDIA_DIR, 'data', 'word2vec')
 if not os.path.exists(WORD2VEC_DATA_DIR):
     os.makedirs(WORD2VEC_DATA_DIR)
 
-WORD2VEC_EMBEDDING_FILE = os.path.join(WORD2VEC_DATA_DIR, 'ko.wikipedia.org.sentences.token_word.vocab_1e+05.vocab.window_1.side_both.corpus.embed_300.batch_500.neg_20.subsample_1e-05.lr_1e-03.decay_0.0.epoch_40.embedding')
+WORD2VEC_EMBEDDING_FILE = os.path.join(WORD2VEC_DATA_DIR, 'ko.wikipedia.org.sentences.token_word.vocab_1e+05.vocab.window_1.side_both.corpus.embed_300.batch_500.neg_100.subsample_1e-05.lr_1e-04.decay_0.0.epoch_20.embedding')

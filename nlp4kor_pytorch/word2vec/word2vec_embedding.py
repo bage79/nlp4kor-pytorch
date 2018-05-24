@@ -100,7 +100,7 @@ class Word2VecEmbedding(object):
     def most_frequent(self, top_n=100) -> [str]:
         """
         most frequent words
-        :param top_n: top N
+        :param top_n: number of output
         :return:
         """
         return [self.idx2word[idx] for idx in range(1, top_n + 1)]
@@ -143,11 +143,20 @@ class Word2VecEmbedding(object):
         else:
             return distance.cdist(vec1, vec2, metric=metric).reshape(-1)[0]
 
+    # noinspection PyDefaultArgument
     def most_similar_vec(self, vec: numpy.ndarray, top_n=3, exclude_words=[], metric='cosine') -> [(str, float)]:
-        vec = vec.reshape((1, -1))
-        mat = self.idx2vec[1:, :]
+        """
+        find most similar words
+        :param vec: input
+        :param top_n: number of output
+        :param exclude_words: exclude words from result
+        :param metric: 'cosine' or 'euclidean', defulat: 'cosine'
+        :return:
+        """
+        vec = vec.reshape((1, -1))  # 1d vector(D,) to 2d matrix(1, D)
+        mat = self.idx2vec[1:, :]  # exclude unknown word
         if metric == 'cosine':
-            sims = 1 - distance.cdist(mat, vec, metric).reshape(-1)
+            sims = 1 - distance.cdist(mat, vec, metric).reshape(-1)  # smller is better
             idxs = sims.argsort()[::-1] + 1
             sims = numpy.sort(sims)[::-1][:top_n + len(exclude_words)].tolist()
         else:
@@ -168,8 +177,8 @@ class Word2VecEmbedding(object):
     def most_similar(self, words: [str], top_n=3, metric='cosine') -> [(str, float)]:
         """
         find most similar words
-        :param words:
-        :param top_n: number of data, default: 3
+        :param words: input
+        :param top_n: number of output
         :param metric: 'cosine' or 'euclidean', defulat: 'cosine'
         :return:
         """
@@ -203,9 +212,15 @@ class Word2VecEmbedding(object):
 
     # noinspection PyMethodMayBeStatic
     def doesnt_match(self, words: [str], top_n=1, metric='cosine') -> str:
-        if len(words) > 31:
-            words = words[:31]
-
+        """
+        find un-similar word from words.
+        :param words: input
+        :param top_n: number of output
+        :param metric: 'cosine' or 'euclidean', defulat: 'cosine'
+        :return:
+        """
+        # if len(words) > 31:
+        #     words = words[:31]
         # combi = [words for _ in range(len(words))]
         # for x in NumpyUtil.combinations(combi):
         #     print(x)
@@ -214,18 +229,33 @@ class Word2VecEmbedding(object):
             if word not in self:
                 raise Exception(f'"{word}" not in embedding.')
             subwords = set(words) - {word}
-            sim = self.similarity_vec(self[word], self.mean(subwords), metric=metric)
+            sim = self.similarity_vec(self[word], self.mean(subwords), metric=metric)  # similarity of one word and the others.
             # print(sim, word, subwords)
             sim_list.append((word, sim))
 
         sim_list = sorted(sim_list, key=lambda x: x[1], reverse=False)
         return ' '.join([w for w, sim in sim_list[:top_n]])
 
-    def mean(self, words: [str]):
+    def mean(self, words: [str]) -> numpy.ndarray:
+        """
+        return mean vector of words.
+        :param words: input
+        :return:
+        """
         vecs = numpy.array([self[word] for word in words])
         return numpy.mean(vecs, axis=0)
 
     def add_suffix(self, root: str, suffix: str, top_n=10, metric='cosine', nearest=100):
+        """
+        add suffix to root
+        :param root: e.g. 사랑
+        :param suffix: e.g. 하고
+        :param top_n: number of output
+        :param metric: 'cosine' or 'euclidean', defulat: 'cosine'
+        :param nearest: candidate words e.g. 사랑하여, 사랑하다, 사랑하니, ....
+        :return: e.g. 사랑하고
+        """
+
         y_list = []  # not found
         if root + suffix not in self:
             return y_list
@@ -252,6 +282,17 @@ class Word2VecEmbedding(object):
             return y_list
 
     def roots(self, word: str, top_n=1, sort_by_len=False, score_with_preserve=False, min_sim=0.3, more_freq=False, metric='cosine') -> list:
+        """
+        remove suffix from word.
+        :param word: e.g. 사랑하고
+        :param top_n: number of output
+        :param sort_by_len: sort candidates by word len or sim
+        :param score_with_preserve: score of preserve original word
+        :param min_sim: retain candidates
+        :param more_freq: root must have more freq than original or not.
+        :param metric: 'cosine' or 'euclidean', defulat: 'cosine'
+        :return: e.g. 사랑
+        """
         candi_list = []
         for a_len in range(1, len(word)):
             a = word[:a_len]
@@ -283,6 +324,12 @@ class Word2VecEmbedding(object):
             return []
 
     def importances(self, words: [str], metric='cosine'):
+        """
+        important scores from words.
+        :param words: e.g. [우리는, 곧, 사랑, 할, 것, 같다]
+        :param metric: 'cosine' or 'euclidean', defulat: 'cosine'
+        :return: e.g. [.2, .1, .9, .1, .0, .0]
+        """
         if len(words) < 3:
             return [1.] * len(words)
 
@@ -296,3 +343,12 @@ class Word2VecEmbedding(object):
             result.append(1. - sentence_sim)
 
         return result
+
+
+if __name__ == '__main__':
+    vec = numpy.array([0, 1, 2])
+    vec1 = vec.reshape((1, -1))  # transpose)
+    vec2 = vec.transpose()
+    print(vec.shape, vec)
+    print(vec1.shape, vec1)
+    print(vec2.shape, vec2)
